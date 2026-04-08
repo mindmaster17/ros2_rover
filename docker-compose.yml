@@ -1,0 +1,36 @@
+services:
+  # 1. The Commander (Your ROS 2 Terminal)
+  rover:
+    #image: osrf/ros:humble-desktop
+    build:                            # <-- ADDED
+      context: .                      # Look for Dockerfile in this folder
+      dockerfile: Dockerfile
+    container_name: shadow_rover
+    network_mode: host      # Allows ROS 2 to talk to other computers
+    privileged: true        # GIVES ACCESS TO ALL USB DEVICES (Critical)
+    ipc: host               # Shared memory for fast simulation
+    pid: host
+    environment:
+      - DISPLAY=${DISPLAY}
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    volumes:
+      - ./src:/root/rover_ws/src   # Maps your laptop folder to the container
+      - /tmp/.X11-unix:/tmp/.X11-unix # Graphics sharing
+    command: tail -f /dev/null     # Keeps the container running forever
+
+  # 2. The Bridge (Micro-ROS for ESP32)
+  # Uncomment the next lines when you plug in the ESP32!
+  # micro-ros:
+  #   image: microros/micro-ros-agent:humble
+  #   network_mode: host
+  #   devices:
+  #     - /dev/ttyUSB0:/dev/ttyUSB0
+  #   command: serial --dev /dev/ttyUSB0 -v6
