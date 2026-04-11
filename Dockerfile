@@ -1,8 +1,11 @@
-# 1. Base Image (The foundation)
+# 1. Base Image
 FROM osrf/ros:humble-desktop
 
-# 2. Install Tactical Packages (The Arsenal)
-# We combine update and install to keep the image clean
+# 2. Hardware Acceleration Hooks (Ready for any NVIDIA system)
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=graphics,utility,compute
+
+# 3.Pre-installed during the build
 RUN apt-get update && apt-get install -y \
     ros-humble-xacro \
     ros-humble-gazebo-ros-pkgs \
@@ -14,8 +17,11 @@ RUN apt-get update && apt-get install -y \
     nano \
     git \
     python3-colcon-common-extensions \
+    mesa-utils \
     && rm -rf /var/lib/apt/lists/*
 
-# 3. Quality of Life Improvements
-# Automatically source ROS when you open a terminal
+# 4. Quality of Life
 RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc
+
+# 5. Drop Zone
+WORKDIR /home/developer/workspace
