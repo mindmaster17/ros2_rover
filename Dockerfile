@@ -25,4 +25,4 @@ RUN apt-get update && apt-get install -y \
 RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc
 
 # 5. Drop Zone
-WORKDIR /home/developer/workspace
+WORKDIR ~/ros2_rover
