@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+
+# 1. The Gazebo Code 255 Fix (Multicast Patch)
+# Forcing the internal network to route Gazebo's discovery packets.
+# We pipe errors to /dev/null so it doesn't crash if the route already exists.
+ip route add 224.0.0.0/4 dev lo 2>/dev/null || true
+
+# 2. Source the Core ROS 2 Environment
+source /opt/ros/humble/setup.bash
+
+# 3. Execute the primary container command (usually bash)
+exec "$@"
