@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     ros-humble-navigation2 \
     ros-humble-nav2-bringup \
     ros-humble-robot-localization \
+    ros-humble-rosbridge-suite \
     nano \
     git \
     python3-colcon-common-extensions \
